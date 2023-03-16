@@ -1,25 +1,25 @@
 'use strict';
 
 const rectangle = {
-  width: '5см',
-  height: '5см',
-  set rectangleWidth(num) {
-    if (typeof num === 'number' && !isNaN(num)) this.width = num + 'см';
+  _width: 5,
+  _height: 5,
+  set width(num) {
+    if (typeof num === 'number' && !isNaN(num)) this._width = num;
   },
-  set rectangleHeight(num) {
-    if (typeof num === 'number' && !isNaN(num)) this.height = num + 'см';
+  set height(num) {
+    if (typeof num === 'number' && !isNaN(num)) this._height = num;
   },
-  get rectangleArea() {
-    const area = this.width.slice(0, -2) * this.height.slice(0, -2);
+  get area() {
+    const area = this._width * this._height + 'см';
     return area;
   },
-  get rectanglePerimeter() {
-    const perim = 2 * (+this.width.slice(0, -2) + +this.height.slice(0, -2));
+  get perimeter() {
+    const perim = 2 * (this._width + this._height) + 'см';
     return perim;
   },
 };
 
-rectangle.rectangleHeight = 'fhtagn';
-rectangle.rectangleWidth = 15;
-console.log(`Площадь: ${rectangle.rectangleArea}`);
-console.log(`Периметр: ${rectangle.rectanglePerimeter}`);
+rectangle.heighteight = 'fhtagn';
+rectangle.width = 15;
+console.log(`Площадь: ${rectangle.area}.`);
+console.log(`Периметр: ${rectangle.perimeter}.`);

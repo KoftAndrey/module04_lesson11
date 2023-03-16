@@ -2,47 +2,15 @@
 
 const guessNumberFromRange = () => {
   alert('Игра "Угадай число в диапазоне".');
+  let min = +prompt('Введите первую границу диапазона.');
+  let max = +prompt('Введите вторую границу диапазона.');
+  if (min > max) [max, min] = [min, max];
 
-  const getArrFromRange = () => {
-    const rangeArray = [];
-    const num1 = +prompt('Введите первую границу диапазона.');
-    const num2 = +prompt('Введите вторую границу диапазона.');
-
-    const constructArr = (num1, num2, rangeArray) => {
-      if (num1 > num2) {
-        rangeArray.push(num2);
-        constructArr(num1, num2 + 1, rangeArray);
-      }
-
-      if (num1 < num2) {
-        rangeArray.push(num1);
-        constructArr(num1 + 1, num2, rangeArray);
-      }
-
-      if (num1 === num2) rangeArray.push(num2);
-      return rangeArray;
-    };
-
-    return constructArr(num1, num2, rangeArray);
-  };
-
-  const getRandomNum = (arr) => {
-    const randomNum = arr[Math.floor(Math.random() * arr.length)];
-    return randomNum;
-  };
-
-  const arrFromRange = getArrFromRange();
-  const randomNumber = getRandomNum(arrFromRange);
+  const attempts = Math.round((max - min + 1) * 0.3);
+  const randomNumber = Math.floor(Math.random() * (max - min + 1) + min);
   const arrOfGuesses = [];
 
-  let attempts;
-  if (arrFromRange.length >= 50 && arrFromRange.length <= 100) {
-    attempts = 15;
-  } else {
-    attempts = Math.round(arrFromRange.length * 0.3);
-  }
-
-  const checkGuess = (arrFromRange, randomNumber, arrOfGuesses, attempts) => {
+  const checkGuess = () => {
     const userGuess = prompt('Введите вашу отгадку.');
 
     if (userGuess === null) {
@@ -50,46 +18,43 @@ const guessNumberFromRange = () => {
       return;
     }
 
-    if (isNaN(+userGuess)) {
-      alert('Введите число!');
-      return checkGuess(arrFromRange, randomNumber, arrOfGuesses, attempts);
+    switch (true) {
+      case isNaN(+userGuess):
+        alert('Введите число!');
+        break;
+
+      case arrOfGuesses.includes(+userGuess):
+        alert('Это число вы уже вводили.');
+        break;
+
+      case +userGuess < min:
+      case +userGuess > max:
+        alert('Это число не входит в указанный диапазон.');
+        break;
+
+      case userGuess > randomNumber:
+        arrOfGuesses.push(+userGuess);
+        alert(`Меньше! Осталось ${attempts - arrOfGuesses.length} попыток.`);
+        break;
+
+      case userGuess < randomNumber:
+        arrOfGuesses.push(+userGuess);
+        alert(`Больше! Осталось ${attempts - arrOfGuesses.length} попыток.`);
+        break;
     }
 
-    if (arrOfGuesses.includes(+userGuess)) {
-      alert('Это число вы уже вводили.');
-      return checkGuess(arrFromRange, randomNumber, arrOfGuesses, attempts);
+    if (+userGuess === randomNumber) {
+      alert('Правильно!');
+      return;
+    } else if (arrOfGuesses.length === attempts) {
+      alert('Вы исчерпали все попытки. Игра закончена.');
+      return;
+    } else {
+      return checkGuess();
     }
-
-    if (!arrFromRange.includes(+userGuess)) {
-      alert('Это число не входит в указанный диапазон.');
-      return checkGuess(arrFromRange, randomNumber, arrOfGuesses, attempts);
-    }
-
-    arrOfGuesses.push(+userGuess);
-
-    if (userGuess > randomNumber) {
-      alert(`Меньше! Осталось ${attempts - arrOfGuesses.length} попыток.`);
-      if (arrOfGuesses.length === attempts) {
-        alert('Вы исчерпали все попытки. Игра закончена.');
-        return;
-      }
-      return checkGuess(arrFromRange, randomNumber, arrOfGuesses, attempts);
-    }
-
-    if (userGuess < randomNumber) {
-      alert(`Больше! Осталось ${attempts - arrOfGuesses.length} попыток.`);
-      if (arrOfGuesses.length === attempts) {
-        alert('Вы исчерпали все попытки. Игра закончена.');
-        return;
-      }
-      return checkGuess(arrFromRange, randomNumber, arrOfGuesses, attempts);
-    }
-
-    alert('Правильно!');
-    return;
   };
 
-  checkGuess(arrFromRange, randomNumber, arrOfGuesses, attempts);
+  checkGuess();
 };
 
 guessNumberFromRange();
